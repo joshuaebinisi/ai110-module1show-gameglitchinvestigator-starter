@@ -28,15 +28,18 @@ Casting fix in `check_guess`:
   - The original `app.py` was secretly turning the secret number into a string every other attempt (line 174–177), so when `check_guess` tried to compare an int guess to a string secret, it either crashed or gave wrong results. Claude caught this and suggested fixing it in two places: cast both `guess` and `secret` to `int` inside `check_guess` so the function always works no matter what type gets passed in, and remove the alternating string conversion from `app.py` entirely. I verified it by running the new `test_string_inputs_cast_to_int` pytest test, which passes `"60"` and `"50"` as strings and confirms the outcome still comes back as `"Too High"`.
 
 Give one example of an AI suggestion that was incorrect or misleading (including what the AI suggested and how you verified the result).
+
 ---
-What the AI suggested:
-- The AI told me to use raw.isnumeric() in parse_guess to check if the input is a number.
 
-Why it seemed correct at first:
-- It is a real Python method. It seems like a clean way to check a string without using a try block.
+**What the AI suggested:**
+When I asked for help validating user input inside `parse_guess`, the AI recommended using `raw.isnumeric()` to check whether the string was a valid number before converting it. It presented this as a clean, Pythonic approach that avoids the overhead of a `try`/`except` block.
 
-How I figured out it was wrong:
-- I tested the game by typing a decimal like "3.14". The code rejected it. The isnumeric() method only accepts whole numbers and breaks if there is a period. I had to reject the code and use a try block instead.
+**Why it seemed correct at first:**
+`isnumeric()` is a real, built-in Python string method. The name sounds like exactly what we need — "is this thing numeric?" — so it was easy to trust without questioning it.
+
+**How I figured out it was wrong:**
+I manually tested the game by typing `"3.14"` into the guess field. The code rejected it as invalid even though `3.14` is clearly a number. I traced back to `isnumeric()` and looked it up: it only returns `True` for strings made entirely of digit characters (like `"42"`), so the decimal point in `"3.14"` causes it to return `False`. It also fails on negative numbers like `"-5"` because of the minus sign. The AI's suggestion looked clean on the surface but broke on any real-world decimal input. I replaced it with a `try`/`except` block that calls `int()` (or `int(float())` for decimals), which handles all those cases correctly. This taught me that AI can suggest methods that exist and sound right but cover a narrower range of inputs than needed.
+
 ---
 
 ## 3. Debugging and testing your fixes
@@ -51,13 +54,14 @@ Claude helped me design the string input test — it pointed out that since the 
 
 ## 4. What did you learn about Streamlit and state?
 
-- How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
+Every time a user clicks a button or types anything in a Streamlit app, the entire Python script reruns from top to bottom — it is not like a normal website where only one function fires. This means any regular variable you declare, like `secret = random.randint(1, 100)`, gets reset to a brand-new value on every click. The fix is `st.session_state`: a dictionary that Streamlit keeps alive between reruns. You write `st.session_state.secret = random.randint(1, 100)` once (guarded by an `if "secret" not in st.session_state` check) and from that point on the same value survives every rerun until you deliberately change it. If I were explaining this to a friend, I would say: imagine your script is a function that gets called fresh every time you touch anything on the page — `session_state` is the one notepad that does not get erased between calls.
 
 ---
 
 ## 5. Looking ahead: your developer habits
 
-- What is one habit or strategy from this project that you want to reuse in future labs or projects?
-  - This could be a testing habit, a prompting strategy, or a way you used Git.
-- What is one thing you would do differently next time you work with AI on a coding task?
-- In one or two sentences, describe how this project changed the way you think about AI generated code.
+**One habit I want to keep:** Writing a pytest test immediately after fixing a bug, not after the whole project is done. On this project, adding `test_string_inputs_cast_to_int` right after the type-casting fix made it easy to confirm the fix worked and would not regress later. That tight loop — fix, write test, run test — is something I want to do on every future project.
+
+**One thing I would do differently:** I would test AI suggestions against edge-case inputs before accepting them. The `isnumeric()` mistake happened because I read the suggestion, thought "that looks right," and moved on without actually trying a decimal or a negative number. Next time I will treat every AI-suggested input-validation method as unproven until I have typed a weird value into it myself.
+
+**How this project changed my thinking:** I used to assume that if AI-generated code ran without crashing, it was probably correct. This project showed me that code can run, give feedback, and still be wrong in ways that only appear on specific inputs — the hints were completely backwards and the secret kept changing, and neither issue threw an error. AI is a fast starting point, but it requires the same skeptical testing I would give any other code.

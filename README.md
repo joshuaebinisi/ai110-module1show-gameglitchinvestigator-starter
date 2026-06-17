@@ -31,21 +31,35 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📸 Demo Walkthrough
 
-Describe your fixed game in numbered steps so a reader can follow along without watching a video:
+The following is a sample game played on **Normal** difficulty (range 1–100, 8 attempts allowed). The secret number is **42**.
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. **Launch the app.** Run `python -m streamlit run app.py`. The page title reads "🎮 Game Glitch Investigator". The sidebar shows *Difficulty: Normal*, *Range: 1 to 100*, *Attempts allowed: 8*.
+2. **Start guessing — too high.** Type `70` in the guess box and click **Submit Guess 🚀**. The hint banner reads *"📉 Go LOWER!"* and the attempts counter drops to 7 remaining.
+3. **Narrow it down — too low.** Type `30` and submit. The hint reads *"📈 Go HIGHER!"* — 6 attempts left.
+4. **Close the gap — too high.** Type `55` and submit. Hint: *"📉 Go LOWER!"* — 5 attempts left.
+5. **Binary-search further — too low.** Type `40` and submit. Hint: *"📈 Go HIGHER!"* — 4 attempts left.
+6. **One away — too high.** Type `50` and submit. Hint: *"📉 Go LOWER!"* — 3 attempts left.
+7. **Correct guess — win!** Type `42` and submit. Balloons fill the screen and the success banner reads *"You won! The secret was 42. Final score: 60"*. The Submit button is disabled for the rest of this round.
+8. **Start a new round.** Click **New Game 🔁**. The input box clears, the attempt counter resets to 8, the debug panel re-locks, and a fresh secret number is generated.
 
 **Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
 
 ## 🧪 Test Results
 
 ```
-# Paste your pytest output here, e.g.:
-# pytest tests/
+# Paste your pytest terminal output below (Challenge 1).
+# Run: pytest tests/test_game_logic.py -v
+# Then copy and paste the full output here.
+#
+# Example format:
+# ========================= test session starts =========================
+# collected X items
+#
+# tests/test_game_logic.py::test_correct_guess PASSED           [ XX%]
+# tests/test_game_logic.py::test_too_high PASSED                [ XX%]
+# tests/test_game_logic.py::test_too_low PASSED                 [ XX%]
+# tests/test_game_logic.py::test_string_inputs_cast_to_int PASSED [ XX%]
+# ...
 # ========================= X passed in 0.XXs =========================
 ```
 
