@@ -16,10 +16,10 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 🕵️‍♂️ Your Mission
 
-1. **Play the game.** Open the "Developer Debug Info" tab in the app to see the secret number. Try to win.
-2. **Find the State Bug.** Why does the secret number change every time you click "Submit"? Ask ChatGPT: *"How do I keep a variable from resetting in Streamlit when I click a button?"*
-3. **Fix the Logic.** The hints ("Higher/Lower") are wrong. Fix them.
-4. **Refactor & Test.** - Move the logic into `logic_utils.py`.
+1. Play the game. Open the "Developer Debug Info" tab in the app to see the secret number. Try to win.
+2. Find the State Bug. Why does the secret number change every time you click "Submit"? Ask ChatGPT: "How do I keep a variable from resetting in Streamlit when I click a button?"
+3. Fix the Logic. The hints ("Higher/Lower") are wrong. Fix them.
+4. Refactor and Test. Move the logic into `logic_utils.py`.
    - Run `pytest` in your terminal.
    - Keep fixing until all tests pass!
 
@@ -29,7 +29,7 @@ It wrote the code, ran away, and now the game is unplayable.
 
 - [x] Detail which bugs you found.
   - The secret number regenerated on every button click because it was declared as a plain variable instead of being stored in `st.session_state`, so Streamlit reset it on every rerun.
-  - The Higher/Lower hints were reversed — guessing too high showed "Go HIGHER!" and too low showed "Go LOWER!".
+  - The Higher/Lower hints were reversed. Guessing too high showed "Go HIGHER!" and too low showed "Go LOWER!".
   - On even-numbered attempts, `app.py` silently converted the secret number to a string, which caused `check_guess` to do string comparison instead of integer comparison and produce wrong results.
   - The Developer Debug Info panel was open by default with no password, exposing the secret number to all users.
   - Clicking "New Game" did not clear the guess input box or re-lock the debug panel.
@@ -48,12 +48,12 @@ It wrote the code, ran away, and now the game is unplayable.
 The following is a sample game played on Normal difficulty (range 1–100, 8 attempts allowed). The secret number is 42.
 
 1. Launch the app. Run `python -m streamlit run app.py`. The page title reads "🎮 Game Glitch Investigator". The sidebar shows Difficulty: Normal, Range: 1 to 100, Attempts allowed: 8.
-2. Start guessing — too high. Type `70` in the guess box and click Submit Guess 🚀. The hint banner reads "📉 Go LOWER!" and the attempts counter drops to 7 remaining.
-3. Narrow it down — too low. Type `30` and submit. The hint reads "📈 Go HIGHER!" — 6 attempts left.
-4. Close the gap — too high. Type `55` and submit. Hint: "📉 Go LOWER!" — 5 attempts left.
-5. Binary-search further — too low. Type `40` and submit. Hint: "📈 Go HIGHER!" — 4 attempts left.
-6. One step away — too high. Type `50` and submit. Hint: "📉 Go LOWER!" — 3 attempts left.
-7. Correct guess — win! Type `42` and submit. Balloons fill the screen and the success banner reads "You won! The secret was 42. Final score: 60". The Submit button is disabled for the rest of this round.
+2. Start guessing, too high. Type `70` in the guess box and click Submit Guess 🚀. The hint banner reads "📉 Go LOWER!" and the attempts counter drops to 7 remaining.
+3. Narrow it down, too low. Type `30` and submit. The hint reads "📈 Go HIGHER!" with 6 attempts left.
+4. Close the gap, too high. Type `55` and submit. Hint: "📉 Go LOWER!" with 5 attempts left.
+5. Binary-search further, too low. Type `40` and submit. Hint: "📈 Go HIGHER!" with 4 attempts left.
+6. One step away, too high. Type `50` and submit. Hint: "📉 Go LOWER!" with 3 attempts left.
+7. Correct guess, win! Type `42` and submit. Balloons fill the screen and the success banner reads "You won! The secret was 42. Final score: 60". The Submit button is disabled for the rest of this round.
 8. Start a new round. Click New Game 🔁. The input box clears, the attempt counter resets to 8, the debug panel re-locks, and a fresh secret number is generated.
 
 Screenshot (optional): <!-- Insert a screenshot of your fixed, winning game here -->
@@ -77,4 +77,4 @@ tests/test_game_logic.py::test_string_inputs_cast_to_int PASSED          [100%]
 
 ## 🚀 Stretch Features
 
-- [ ] [If you choose to complete Challenge 4, describe the Enhanced UI changes here — a screenshot is optional]
+- [ ] [If you choose to complete Challenge 4, describe the Enhanced UI changes here. A screenshot is optional.]
